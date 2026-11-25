@@ -200,23 +200,23 @@ button.btn:disabled{opacity:.5;cursor:wait}
 
   <!-- 1C -->
   <div class="item" id="q1c">
-    <span class="bloom">הערכה + ניבוי</span>
-    <h3><span class="lbl">ג</span> הערכת החלטה טיפולית <span class="pts">(6 נקודות)</span></h3>
-    <p class="instr">רופא תורן כתב: <b>"ההמטוקריט של ד"ל הוא 56%. יש לו יותר מדי תאי דם אדומים, ולכן צריך לתת לו תרופה שמפחיתה את ייצורם."</b><br>
-      הַעריכו את הטענה ואת ההחלטה. אחר כך <b>גררו את הגבול במבחנה שמתחת</b> כדי לחזות את ההמטוקריט של ד"ל אחרי שיקבל עירוי נוזלים, ונמקו.</p>
-    <div class="mc" data-ans="disagree">
-      <label><input type="radio" name="q1c" value="agree"> הטענה וההחלטה נכונות</label>
-      <label><input type="radio" name="q1c" value="partial"> הטענה נכונה, אבל ההחלטה לא</label>
-      <label><input type="radio" name="q1c" value="disagree"> הטענה שגויה, ולכן גם ההחלטה לא מתאימה</label>
-    </div>
+    <span class="bloom">ניבוי + הערכה – מקרה חדש</span>
+    <h3><span class="lbl">ג</span> מקרה חדש: עודף אריתרופואטין <span class="pts">(6 נקודות)</span></h3>
+    <p class="instr"><b>מ"ר</b>, בן 60, אובחן עם גידול בכליה שמפריש כמות גדולה של ההורמון אריתרופואטין. לפני שהגידול התפתח, ההמטוקריט שלו היה 44%.</p>
+    <p class="instr">1. <b>סמנו במבחנה</b> את ההמטוקריט הצפוי של מ"ר (גררו את הגבול הכתום), והסבירו את המנגנון.<br>
+      2. גם אצל מ"ר וגם אצל ד"ל (מבחנה A) ההמטוקריט גבוה. קבעו מה הסיבה אצל מ"ר, והסבירו במה היא שונה מהסיבה אצל ד"ל.</p>
     <div class="predict">
       <svg id="predTube" viewBox="0 0 120 300" width="110" height="275"></svg>
-      <div><div class="readout" id="predRead">גררו את הגבול הכתום כדי לבנות את המבחנה הצפויה.</div></div>
+      <div>
+        <div class="readout" id="predRead">גררו את הגבול הכתום כדי לסמן את ההמטוקריט הצפוי.</div>
+        <p style="margin:12px 0 0">הסיבה להמטוקריט הגבוה אצל מ"ר:
+          <select data-ans="cells"><option value="">—</option><option value="cells">עלייה בנפח תאי הדם האדומים</option><option value="plasma">ירידה בנפח הפלזמה</option></select></p>
+      </div>
     </div>
-    <textarea maxlength="800" placeholder="נמקו את ההערכה ואת הניבוי שלכם..."></textarea><div class="counter">0/800</div>
+    <textarea maxlength="800" placeholder="הסבירו את המנגנון ואת ההבדל בין מ&quot;ר לד&quot;ל..."></textarea><div class="counter">0/800</div>
     <div class="actions"><button class="btn primary" data-check="q1c">בדיקה</button></div>
     <div class="fb"></div>
-    <div class="key"><b>מחוון:</b> הטענה שגויה. ההמטוקריט גבוה בגלל ירידה בנפח הפלזמה (התייבשות), ולא בגלל עודף תאים. תרופה שמפחיתה ייצור תאים אינה מתאימה, והטיפול הנכון הוא החזרת נוזלים. ניבוי: אחרי העירוי נפח הפלזמה יחזור, וההמטוקריט ירד לטווח התקין (כ-42%–48%). אם ההמטוקריט נשאר גבוה גם אחרי שהנוזלים הוחזרו, יש לבדוק סיבה אחרת (2 נק' לעמדה, 2 לניבוי, 2 לנימוק).</div>
+    <div class="key"><b>מחוון:</b> אריתרופואטין מופרש מהכליה בתגובה לירידה ברמת החמצן, ומעודד את מח העצם לייצר תאי דם אדומים. עודף אריתרופואטין גורם לייצור מוגבר של תאים, ולכן נפח התאים וההמטוקריט עולים מעל הטווח התקין (מעל 52%, פוליציטמיה משנית). אצל ד"ל ההמטוקריט גבוה כי נפח הפלזמה ירד (איבוד נוזלים), ומספר התאים כמעט לא השתנה. אצל מ"ר מספר התאים באמת עלה. הדם שלו צמיג יותר, וזה מגביר את הסיכון לקרישי דם (2 נק' לניבוי, 2 למנגנון, 2 להשוואה).</div>
   </div>
 </section>
 
@@ -394,13 +394,13 @@ function fbClear(item){const f=$(".fb",item);if(f)f.className="fb";}
   el("rect",{x:TX-12,y:-9,width:TW+40,height:18,fill:"transparent"},pm);
   el("line",{x1:TX-8,x2:TX+TW+6,y1:0,y2:0,stroke:"#e8771e","stroke-width":3},pm);
   el("polygon",{points:`${TX-14},-6 ${TX-14},6 ${TX-4},0`,fill:"#e8771e"},pm);
-  el("text",{x:TX+TW/2,y:TOP-20,"text-anchor":"middle","font-size":11,fill:"#1d2733"},ps).textContent="ד\"ל אחרי עירוי";
-  let pred=56;const setP=p=>{pred=Math.max(5,Math.min(95,Math.round(p)));const h=H*pred/100;prbc.setAttribute("y",BOT-h);prbc.setAttribute("height",h);pm.setAttribute("transform",`translate(0 ${BOT-h})`);
-    $("#predRead").textContent=`ההמטוקריט הצפוי שבניתם: ${pred}% (לפני הטיפול: 56%)`;window.__hct.pred=pred;};
+  el("text",{x:TX+TW/2,y:TOP-20,"text-anchor":"middle","font-size":11,fill:"#1d2733"},ps).textContent="מ\"ר כעת";
+  let pred=44;const setP=p=>{pred=Math.max(5,Math.min(95,Math.round(p)));const h=H*pred/100;prbc.setAttribute("y",BOT-h);prbc.setAttribute("height",h);pm.setAttribute("transform",`translate(0 ${BOT-h})`);
+    $("#predRead").textContent=`ההמטוקריט הצפוי שסימנתם: ${pred}% (לפני הגידול: 44%)`;window.__hct.pred=pred;};
   let pd=false;pm.addEventListener("pointerdown",e=>{pd=true;pm.setPointerCapture(e.pointerId);e.preventDefault();});
   pm.addEventListener("pointermove",e=>{if(!pd)return;const pt=ps.createSVGPoint();pt.x=e.clientX;pt.y=e.clientY;const p=pt.matrixTransform(ps.getScreenCTM().inverse());setP((BOT-p.y)/H*100);fbClear($("#q1c"));});
   pm.addEventListener("pointerup",()=>pd=false);
-  setP(56);window.__hct.moved=()=>pred!==56;
+  setP(44);window.__hct.moved=()=>pred!==44;
   window.__hct.reset=()=>{if(spun)tubeEls.forEach(t=>t.setM(100));};
   window.__hct.truth=Object.fromEntries(TUBES.map(t=>[t.id,t.hct]));
 })();
@@ -474,12 +474,11 @@ const checks={
     let g=0;$$(".slot",it).forEach(s=>{const c=s.firstElementChild;const ok=c&&c.dataset.v===s.dataset.ans;s.classList.add(ok?"ok":"bad");if(ok)g++;});
     fb(it,m===3&&g===3,`מדידות מדויקות: ${m} מתוך 3${miss.length?" (בדקו את מבחנה "+miss.join(", ")+")":""} · התאמות נכונות: ${g} מתוך 3.`);},
   q1b(){const it=$("#q1b");let g=0;const ss=$$("select",it);ss.forEach(s=>{const ok=s.value===s.dataset.ans;s.classList.add(ok?"ok":"bad");if(ok)g++;});fb(it,g===4,g===4?"הטבלה נכונה. עיקר הניקוד הוא על ההסבר.":`${g} מתוך 4 נכונים בטבלה. חשבו מה כל מטופל איבד.`);},
-  q1c(){const it=$("#q1c"),box=$(".mc",it),ch=$("input:checked",box),H=window.__hct;
-    if(!ch)return fb(it,false,"עדיין לא נבחרה עמדה.");const okC=ch.value===box.dataset.ans;
-    $$(".mc label",it).forEach(l=>l.classList.remove("ok","bad"));ch.closest("label").classList.add(okC?"ok":"bad");
-    if(!H.moved())return fb(it,false,(okC?"העמדה נכונה. ":"")+"עכשיו גררו את הגבול במבחנה כדי לחזות את ההמטוקריט אחרי העירוי.");
-    const okP=H.pred>=40&&H.pred<=50;
-    fb(it,okC&&okP,(okC?"העמדה נכונה. ":"קראו שוב את הטענה: האם באמת יש לד\"ל יותר תאים? ")+(okP?`הניבוי (${H.pred}%) סביר.`:H.pred>50?`הניבוי (${H.pred}%) עדיין גבוה. מה יקרה לנפח הפלזמה אחרי העירוי?`:`הניבוי (${H.pred}%) נמוך מדי. האם העירוי מוריד את מספר התאים?`));},
+  q1c(){const it=$("#q1c"),H=window.__hct,sel=$("select",it);
+    if(!H.moved())return fb(it,false,"קודם סמנו במבחנה את ההמטוקריט הצפוי של מ\"ר.");
+    const okP=H.pred>=53&&H.pred<=70;const okS=sel.value===sel.dataset.ans;
+    if(sel.value)sel.classList.add(okS?"ok":"bad");
+    fb(it,okP&&okS,(okP?`הניבוי (${H.pred}%) סביר. `:H.pred<53?`הניבוי (${H.pred}%) עדיין בטווח התקין. מה עושה עודף אריתרופואטין למח העצם? `:`הניבוי (${H.pred}%) גבוה מאוד. `)+(!sel.value?"בחרו גם את הסיבה.":okS?"הסיבה נכונה.":"בדקו שוב את הסיבה: מה ההורמון מגביר?"));},
   q2a(){const it=$("#q2a");let g=0;$$(".slot",it).forEach(s=>{const c=s.firstElementChild;const ok=c&&c.dataset.v===s.dataset.ans;s.classList.add(ok?"ok":"bad");if(ok)g++;});
     const p=$$("#labTable tr.picked");let h=0;p.forEach(tr=>{const ok=tr.dataset.ok==="1";tr.classList.remove("picked");tr.classList.add(ok?"ok":"bad");if(ok)h++;});
     fb(it,g===2&&h===2,`שיוך: ${g} מתוך 2 · ממצאים מבחינים: ${h} מתוך 2${p.length<2?" (יש לבחור שני ממצאים)":""}.`);},
