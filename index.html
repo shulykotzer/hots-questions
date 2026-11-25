@@ -1,0 +1,501 @@
+<!DOCTYPE html>
+<html lang="he" dir="rtl">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>שאלות עתירות מדיה – מדעי הבריאות</title>
+<style>
+:root{
+  --bg:#eef2f6; --paper:#fff; --ink:#1d2733; --muted:#5b6b7c; --line:#d5dde6;
+  --brand:#1f5f8b; --brand-2:#e8f1f8; --ok:#1e7a46; --ok-bg:#e5f5ec; --bad:#b3261e; --bad-bg:#fbe9e7;
+  --accent:#c9541e; --chip:#f4f7fa;
+}
+*{box-sizing:border-box}
+body{margin:0;font-family:"Assistant","Rubik","Segoe UI",Arial,sans-serif;background:var(--bg);color:var(--ink);font-size:17px;line-height:1.55}
+header.top{background:var(--brand);color:#fff;padding:10px 22px;display:flex;align-items:center;gap:18px;flex-wrap:wrap;position:sticky;top:0;z-index:20;box-shadow:0 2px 6px rgba(0,0,0,.15)}
+header.top h1{font-size:18px;margin:0;font-weight:700}
+header.top .meta{font-size:14px;opacity:.85}
+header.top .spacer{flex:1}
+.toggle{display:flex;align-items:center;gap:8px;font-size:14px;background:rgba(255,255,255,.12);padding:5px 12px;border-radius:20px;cursor:pointer;user-select:none}
+.toggle input{accent-color:#fff}
+nav.qnav{display:flex;gap:6px;padding:12px 22px 0;max-width:1100px;margin:0 auto}
+nav.qnav button{border:1px solid var(--line);border-bottom:none;background:#dfe6ee;color:var(--ink);padding:9px 20px;border-radius:10px 10px 0 0;font:inherit;font-size:16px;cursor:pointer}
+nav.qnav button.active{background:var(--paper);font-weight:700;color:var(--brand)}
+main{max-width:1100px;margin:0 auto 60px;background:var(--paper);border:1px solid var(--line);border-radius:0 0 12px 12px;padding:26px 30px}
+section.q{display:none}
+section.q.active{display:block}
+.case{background:var(--brand-2);border-right:5px solid var(--brand);padding:14px 18px;border-radius:8px;margin-bottom:22px}
+.case b{color:var(--brand)}
+.item{border:1px solid var(--line);border-radius:10px;padding:18px 20px;margin:18px 0;position:relative}
+.item h3{margin:0 0 4px;font-size:17px;display:flex;gap:10px;align-items:baseline;flex-wrap:wrap}
+.item h3 .lbl{background:var(--brand);color:#fff;border-radius:6px;padding:0 9px;font-size:15px}
+.item h3 .pts{font-weight:400;color:var(--muted);font-size:14px}
+.item .bloom{position:absolute;top:14px;left:16px;font-size:12px;background:#fff4e5;color:#8a4b00;border:1px solid #f0d2a8;border-radius:12px;padding:1px 10px;display:none}
+body.teacher .item .bloom{display:inline-block}
+.instr{color:var(--muted);font-size:15px;margin:2px 0 12px}
+.row{display:flex;gap:22px;flex-wrap:wrap;align-items:flex-start}
+.bank{display:flex;flex-wrap:wrap;gap:8px;padding:10px;border:2px dashed var(--line);border-radius:10px;min-height:54px;background:#fafcfd;margin-bottom:12px}
+.chip{background:var(--chip);border:1px solid #b9c6d3;border-radius:8px;padding:6px 12px;cursor:grab;user-select:none;font-size:15px;white-space:nowrap;transition:transform .1s,box-shadow .1s}
+.chip:hover{box-shadow:0 2px 6px rgba(0,0,0,.12)}
+.chip.sel{outline:3px solid var(--accent);transform:translateY(-1px)}
+.zones{display:grid;gap:10px}
+.zone{display:flex;align-items:center;gap:10px}
+.zone .slot{flex:1;min-width:190px;min-height:42px;border:2px dashed #9fb2c4;border-radius:8px;display:flex;align-items:center;padding:3px 6px;background:#fff}
+.zone .slot.over{background:#fff7ef;border-color:var(--accent)}
+.zone .num{width:30px;height:30px;border-radius:50%;background:var(--accent);color:#fff;display:flex;align-items:center;justify-content:center;font-weight:700;flex:none}
+.zone .name{min-width:120px;font-weight:600}
+.slot.ok{border-style:solid;border-color:var(--ok);background:var(--ok-bg)}
+.slot.bad{border-style:solid;border-color:var(--bad);background:var(--bad-bg)}
+.bin{flex:1;min-width:230px;border:2px dashed #9fb2c4;border-radius:10px;padding:10px;min-height:120px;background:#fff}
+.bin h4{margin:0 0 8px;font-size:15px;color:var(--brand)}
+.bin .slot{display:flex;flex-wrap:wrap;gap:6px;min-height:70px}
+.figure{border:1px solid var(--line);border-radius:8px;padding:8px;background:#fff;overflow-x:auto}
+.figure .cap{font-size:13px;color:var(--muted);text-align:center;margin-top:4px}
+svg text{font-family:inherit}
+.hot{fill:transparent;cursor:pointer}
+.hot:hover{fill:rgba(201,84,30,.12)}
+.hot.picked{fill:rgba(201,84,30,.25);stroke:var(--accent);stroke-width:2}
+.hot.ok{fill:rgba(30,122,70,.22);stroke:var(--ok);stroke-width:2}
+.hot.bad{fill:rgba(179,38,30,.2);stroke:var(--bad);stroke-width:2}
+select{font:inherit;font-size:16px;padding:3px 8px;border:1px solid #9fb2c4;border-radius:6px;background:#fff;margin:0 4px}
+select.ok{border-color:var(--ok);background:var(--ok-bg)} select.bad{border-color:var(--bad);background:var(--bad-bg)}
+.mc label{display:flex;gap:10px;align-items:flex-start;padding:8px 12px;border:1px solid var(--line);border-radius:8px;margin:6px 0;cursor:pointer}
+.mc label:hover{background:#f6f9fb}
+.mc input{margin-top:6px;accent-color:var(--brand)}
+.mc label.ok{border-color:var(--ok);background:var(--ok-bg)} .mc label.bad{border-color:var(--bad);background:var(--bad-bg)}
+textarea{width:100%;min-height:96px;font:inherit;font-size:16px;padding:10px;border:1px solid #9fb2c4;border-radius:8px;resize:vertical}
+.counter{font-size:12px;color:var(--muted);text-align:left}
+.actions{display:flex;gap:10px;margin-top:12px;flex-wrap:wrap}
+button.btn{font:inherit;font-size:15px;border:1px solid var(--brand);background:#fff;color:var(--brand);padding:5px 16px;border-radius:7px;cursor:pointer}
+button.btn.primary{background:var(--brand);color:#fff}
+.fb{margin-top:10px;padding:8px 12px;border-radius:8px;font-size:15px;display:none}
+.fb.show{display:block}
+.fb.ok{background:var(--ok-bg);color:var(--ok)} .fb.bad{background:var(--bad-bg);color:var(--bad)}
+.key{display:none;margin-top:12px;background:#fffaf0;border:1px solid #f0d2a8;border-radius:8px;padding:10px 14px;font-size:15px}
+body.teacher .key{display:block}
+.key b{color:#8a4b00}
+table.lab{border-collapse:collapse;width:100%;font-size:15px}
+table.lab th,table.lab td{border:1px solid var(--line);padding:7px 10px;text-align:center}
+table.lab th{background:#f1f5f9}
+table.lab td.sel{cursor:pointer}
+table.lab td.sel:hover{background:#fff4ec}
+table.lab td.picked{background:#ffe3d1;outline:2px solid var(--accent)}
+table.lab td.ok{background:var(--ok-bg);outline:2px solid var(--ok)} table.lab td.bad{background:var(--bad-bg);outline:2px solid var(--bad)}
+.tip{position:absolute;pointer-events:none;background:#1d2733;color:#fff;font-size:13px;padding:4px 8px;border-radius:5px;display:none;white-space:nowrap;z-index:30}
+.legend{display:flex;gap:18px;font-size:14px;justify-content:center;margin-top:4px}
+.legend span::before{content:"";display:inline-block;width:18px;height:3px;vertical-align:middle;margin-left:6px;background:currentColor}
+.sub{border:2px solid var(--brand);border-radius:10px;padding:14px 18px;margin-bottom:22px;background:#fbfdff}
+.sub h2{margin:0 0 8px;font-size:19px;color:var(--brand)}
+.sub p{margin:6px 0}
+.lvl{display:inline-flex;gap:8px;align-items:center;flex-wrap:wrap}
+.lvl span{border-radius:14px;padding:1px 12px;font-size:14px;font-weight:700}
+.lvl .lo{background:#eef1f4;color:#5b6b7c}.lvl .hi{background:#fff1e6;color:#a8430f}
+table.map{border-collapse:collapse;width:100%;font-size:15px}
+table.map th,table.map td{border:1px solid var(--line);padding:9px 10px;vertical-align:top;text-align:right}
+table.map th{background:#f1f5f9}
+table.map td:nth-child(3){white-space:nowrap;font-weight:700}
+footer.note{max-width:1100px;margin:0 auto 40px;color:var(--muted);font-size:13px;padding:0 10px}
+@media (max-width:700px){main{padding:16px}.item{padding:14px}}
+
+.ev-list,.monitor-wrap{}
+table.judge{border-collapse:collapse;font-size:15px}
+table.judge th,table.judge td{border:1px solid var(--line);padding:6px 12px;text-align:center}
+.readout{background:#f1f5f9;border-radius:8px;padding:8px 12px;font-size:15px;margin-top:8px}
+#labTable tr.sel{cursor:pointer}#labTable tr.sel:hover{background:#fff4ec}
+#labTable tr.picked td{background:#ffe3d1}#labTable tr.ok td{background:var(--ok-bg)}#labTable tr.bad td{background:var(--bad-bg)}
+.lab-sim{border:2px solid #c9d6e2;border-radius:12px;background:linear-gradient(#f9fbfd,#eef3f8);padding:14px 18px;margin-bottom:22px}
+.sim-head{display:flex;gap:14px;align-items:center;flex-wrap:wrap;margin-bottom:10px}
+.sim-head b{font-size:17px;color:var(--brand)}
+.sim-state{font-size:14px;color:var(--muted)}
+.sim-body{display:flex;gap:28px;align-items:center;flex-wrap:wrap;justify-content:center}
+.centrifuge{text-align:center}
+.tubes{display:flex;gap:18px;flex-wrap:wrap;justify-content:center}
+.tube-box{text-align:center;background:#fff;border:1px solid var(--line);border-radius:10px;padding:6px 6px 8px}
+.tube-lbl{font-weight:700}.tube-read{font-size:14px;color:#a8430f;min-height:20px}
+.sim-help{font-size:14px;color:var(--muted);margin:10px 0 0}
+.zones.three{grid-template-columns:repeat(auto-fit,minmax(220px,1fr))}
+.predict{display:flex;gap:18px;align-items:center;margin:12px 0;flex-wrap:wrap}
+button.btn:disabled{opacity:.5;cursor:wait}
+</style>
+</head>
+<body>
+<header class="top">
+  <h1>מדעי הבריאות – שאלות עתירות מדיה</h1>
+  <span class="meta">דגם לבחינה ממוחשבת</span>
+  <span class="spacer"></span>
+  <label class="toggle"><input type="checkbox" id="teacher"> מצב מורה: מחוון ורמות בלום</label>
+</header>
+
+<nav class="qnav">
+  <button class="active" data-q="q1">שאלה 1 · המטוקריט</button>
+  <button data-q="q2">שאלה 2 · קריאטינין ותפקוד הכליות</button>
+</nav>
+
+<main>
+<!-- =================== QUESTION 1 =================== -->
+<section class="q active" id="q1">
+  <div class="case">
+    <b>סיפור מקרה:</b> שלושה מטופלים הגיעו לבדיקת דם במרפאה:<br>
+    <b>נ"ש</b>, בת 17, ספורטאית שאינה אוכלת בשר. בחודשים האחרונים היא עייפה וחיוורת, ומתנשפת באימונים.<br>
+    <b>ד"ל</b>, בן 30, סובל כבר יומיים מהקאות ומשלשולים. הוא כמעט לא מצליח לשתות.<br>
+    <b>ע"כ</b>, בן 35, הגיע לבדיקה שגרתית ומרגיש טוב.<br>
+    מכל מטופל נלקחה מבחנת דם. המבחנות סומנו באותיות ולא בשמות. (טווח תקין של המטוקריט: 37%–52%)
+  </div>
+
+  <div class="lab-sim">
+    <div class="sim-head">
+      <b>מעבדה וירטואלית</b>
+      <button class="btn primary" id="spinBtn">▶ הפעלת הצנטריפוגה</button>
+      <span id="spinState" class="sim-state">המבחנות לפני הסירכוז</span>
+    </div>
+    <div class="sim-body">
+      <div class="centrifuge"><svg id="rotor" viewBox="0 0 220 220" width="200" height="200"></svg><div class="cap">צנטריפוגה</div></div>
+      <div class="tubes" id="tubes"></div>
+    </div>
+    <p class="sim-help" id="simHelp">הפעילו את הצנטריפוגה. אחרי הסירכוז גררו את הסמן הכתום בכל מבחנה אל הגבול בין תאי הדם האדומים לפלזמה, כדי למדוד את ההמטוקריט.</p>
+  </div>
+
+  <!-- 1A -->
+  <div class="item" id="q1a">
+    <span class="bloom">ניתוח – מדידה והתאמה</span>
+    <h3><span class="lbl">א</span> מי בכל מבחנה? <span class="pts">(6 נקודות)</span></h3>
+    <p class="instr">מדדו את ההמטוקריט בכל מבחנה. אחר כך גררו כל מטופל אל המבחנה שלו, לפי סיפור המקרה והמדידה. הסבירו בקצרה כל התאמה.</p>
+    <div class="bank" data-bank="q1a">
+      <span class="chip" draggable="true" data-v="ns">נ"ש – הספורטאית</span>
+      <span class="chip" draggable="true" data-v="dl">ד"ל – הקאות ושלשולים</span>
+      <span class="chip" draggable="true" data-v="ak">ע"כ – בדיקה שגרתית</span>
+    </div>
+    <div class="zones three">
+      <div class="zone"><span class="name">מבחנה A</span><div class="slot" data-ans="dl"></div></div>
+      <div class="zone"><span class="name">מבחנה B</span><div class="slot" data-ans="ns"></div></div>
+      <div class="zone"><span class="name">מבחנה C</span><div class="slot" data-ans="ak"></div></div>
+    </div>
+    <textarea style="margin-top:12px" maxlength="700" placeholder="נמקו כל התאמה בעזרת הערך שמדדתם וסיפור המקרה..."></textarea><div class="counter">0/700</div>
+    <div class="actions"><button class="btn primary" data-check="q1a">בדיקה</button><button class="btn" data-reset="q1a">איפוס</button></div>
+    <div class="fb"></div>
+    <div class="key"><b>מחוון:</b> A = 56% – ד"ל (גבוה). B = 28% – נ"ש (נמוך). C = 44% – ע"כ (תקין). אצל נ"ש ההמטוקריט נמוך: אנמיה, כנראה מחוסר ברזל בגלל תזונה ללא בשר ומאמץ. היא מסבירה את העייפות, החיוורון וההתנשפות. אצל ד"ל ההמטוקריט גבוה בגלל איבוד נוזלים (2 נק' למדידה, 2 להתאמה, 2 לנימוק).</div>
+  </div>
+
+  <!-- 1B -->
+  <div class="item" id="q1b">
+    <span class="bloom">ניתוח – הסבר מנגנון מתוך המדיה</span>
+    <h3><span class="lbl">ב</span> שני מצבים, שני מנגנונים <span class="pts">(6 נקודות)</span></h3>
+    <p class="instr">השוו בין מבחנה A למבחנה B. בשתיהן ההמטוקריט חריג, אבל מסיבה שונה. בטבלה, קבעו מה השתנה בכל מבחנה, והסבירו כיצד זה משפיע על ההמטוקריט.</p>
+    <table class="judge">
+      <thead><tr><th></th><th>נפח תאי הדם האדומים</th><th>נפח הפלזמה</th></tr></thead>
+      <tbody>
+        <tr><td>מבחנה A (ד"ל)</td>
+          <td><select data-ans="same"><option value="">—</option><option value="up">עלה</option><option value="same">כמעט לא השתנה</option><option value="down">ירד</option></select></td>
+          <td><select data-ans="down"><option value="">—</option><option value="up">עלה</option><option value="same">כמעט לא השתנה</option><option value="down">ירד</option></select></td></tr>
+        <tr><td>מבחנה B (נ"ש)</td>
+          <td><select data-ans="down"><option value="">—</option><option value="up">עלה</option><option value="same">כמעט לא השתנה</option><option value="down">ירד</option></select></td>
+          <td><select data-ans="same"><option value="">—</option><option value="up">עלה</option><option value="same">כמעט לא השתנה</option><option value="down">ירד</option></select></td></tr>
+      </tbody>
+    </table>
+    <textarea style="margin-top:12px" maxlength="700" placeholder="הסבירו: למה המטוקריט גבוה אינו בהכרח אומר שיש יותר תאי דם אדומים?"></textarea><div class="counter">0/700</div>
+    <div class="actions"><button class="btn primary" data-check="q1b">בדיקת הטבלה</button></div>
+    <div class="fb"></div>
+    <div class="key"><b>מחוון:</b> המטוקריט = נפח תאי הדם האדומים חלקי נפח הדם הכולל. אצל ד"ל מספר התאים כמעט לא השתנה, אבל נפח הפלזמה ירד בגלל איבוד נוזלים. לכן החלק היחסי של התאים עלה. אצל נ"ש נפח התאים ירד (אנמיה), והפלזמה תקינה. לכן החלק היחסי ירד. המטוקריט הוא יחס ולא כמות, ולכן ערך גבוה יכול לנבוע מירידה בפלזמה (2 נק' לטבלה, 4 להסבר).</div>
+  </div>
+
+  <!-- 1C -->
+  <div class="item" id="q1c">
+    <span class="bloom">הערכה + ניבוי</span>
+    <h3><span class="lbl">ג</span> הערכת החלטה טיפולית <span class="pts">(6 נקודות)</span></h3>
+    <p class="instr">רופא תורן כתב: <b>"ההמטוקריט של ד"ל הוא 56%. יש לו יותר מדי תאי דם אדומים, ולכן צריך לתת לו תרופה שמפחיתה את ייצורם."</b><br>
+      הַעריכו את הטענה ואת ההחלטה. אחר כך <b>גררו את הגבול במבחנה שמתחת</b> כדי לחזות את ההמטוקריט של ד"ל אחרי שיקבל עירוי נוזלים, ונמקו.</p>
+    <div class="mc" data-ans="disagree">
+      <label><input type="radio" name="q1c" value="agree"> הטענה וההחלטה נכונות</label>
+      <label><input type="radio" name="q1c" value="partial"> הטענה נכונה, אבל ההחלטה לא</label>
+      <label><input type="radio" name="q1c" value="disagree"> הטענה שגויה, ולכן גם ההחלטה לא מתאימה</label>
+    </div>
+    <div class="predict">
+      <svg id="predTube" viewBox="0 0 120 300" width="110" height="275"></svg>
+      <div><div class="readout" id="predRead">גררו את הגבול הכתום כדי לבנות את המבחנה הצפויה.</div></div>
+    </div>
+    <textarea maxlength="800" placeholder="נמקו את ההערכה ואת הניבוי שלכם..."></textarea><div class="counter">0/800</div>
+    <div class="actions"><button class="btn primary" data-check="q1c">בדיקה</button></div>
+    <div class="fb"></div>
+    <div class="key"><b>מחוון:</b> הטענה שגויה. ההמטוקריט גבוה בגלל ירידה בנפח הפלזמה (התייבשות), ולא בגלל עודף תאים. תרופה שמפחיתה ייצור תאים אינה מתאימה, והטיפול הנכון הוא החזרת נוזלים. ניבוי: אחרי העירוי נפח הפלזמה יחזור, וההמטוקריט ירד לטווח התקין (כ-42%–48%). אם ההמטוקריט נשאר גבוה גם אחרי שהנוזלים הוחזרו, יש לבדוק סיבה אחרת (2 נק' לעמדה, 2 לניבוי, 2 לנימוק).</div>
+  </div>
+</section>
+
+<!-- =================== QUESTION 2 =================== -->
+<section class="q" id="q2">
+  <div class="case">
+    <b>סיפור מקרה:</b> שני מטופלים אושפזו באותו יום בגלל עלייה ברמת הקריאטינין בדם (ערך תקין: עד 1.0 מ"ג/ד"ל).<br>
+    <b>א"ג</b>, בן 20, הגיע לאחר יומיים של טיול במדבר בחום כבד. הוא שתה מעט, וסיפר על חולשה ועל מעט שתן כהה.<br>
+    <b>ר"ש</b>, בן 58, אושפז שבוע קודם בגלל זיהום, וטופל באנטיביוטיקה שידוע שהיא עלולה לפגוע בתאי צינוריות הכליה.<br>
+    שניהם קיבלו עירוי נוזלים לווריד ביום 1. איור 1 מציג את רמת הקריאטינין שלהם, וטבלה 1 את בדיקות יום האשפוז.
+  </div>
+
+  <div class="figure" style="position:relative">
+    <svg id="crGraph" viewBox="0 0 700 360" width="100%" role="img" aria-label="גרף רמת קריאטינין לאורך חמישה ימים"></svg>
+    <div class="legend"><span style="color:#1f5f8b">א"ג</span><span style="color:#c9541e">ר"ש</span><span style="color:#2e8b57" id="lgC">מ"ב (סעיף ב)</span></div>
+    <div class="cap">איור 1: רמת הקריאטינין בדם (מ"ג/ד"ל) לפי ימי אשפוז. העבירו את העכבר מעל נקודה כדי לראות את הערך.</div>
+    <div class="tip" id="tip"></div>
+  </div>
+
+  <!-- 2A analysis -->
+  <div class="item" id="q2a">
+    <span class="bloom">ניתוח – אבחנה מבדלת וראיות</span>
+    <h3><span class="lbl">א</span> אבחנה מבדלת <span class="pts">(6 נקודות)</span></h3>
+    <p class="instr">שני המטופלים קיבלו אותו טיפול, אבל הגיבו אחרת. גררו לכל מטופל את סוג אי-ספיקת הכליות החריפה. אחר כך <b>לחצו בטבלה על שני ממצאים</b> שמבחינים בין המטופלים, ולא על ממצאים שמשותפים לשניהם. הסבירו את בחירתכם.</p>
+    <div class="bank" data-bank="q2a">
+      <span class="chip" draggable="true" data-v="pre">פרה-רנלית: ירידה בזרימת הדם לכליה</span>
+      <span class="chip" draggable="true" data-v="renal">רנלית: פגיעה ברקמת הכליה</span>
+      <span class="chip" draggable="true" data-v="post">פוסט-רנלית: חסימה ביציאת השתן</span>
+    </div>
+    <div class="zones" style="margin-bottom:14px">
+      <div class="zone"><span class="name" style="color:#1f5f8b">א"ג</span><div class="slot" data-ans="pre"></div></div>
+      <div class="zone"><span class="name" style="color:#c9541e">ר"ש</span><div class="slot" data-ans="renal"></div></div>
+    </div>
+    <table class="lab" id="labTable">
+      <caption style="caption-side:top;text-align:right;font-weight:700;padding-bottom:6px">טבלה 1: בדיקות מיום האשפוז</caption>
+      <thead><tr><th>בדיקה</th><th>טווח תקין</th><th style="color:#1f5f8b">א"ג</th><th style="color:#c9541e">ר"ש</th></tr></thead>
+      <tbody>
+        <tr class="sel" data-ok="0"><td>קריאטינין בדם (מ"ג/ד"ל)</td><td>0.6–1.0</td><td>1.3</td><td>1.8</td></tr>
+        <tr class="sel" data-ok="0"><td>שתנן (BUN) בדם (מ"ג/ד"ל)</td><td>7–20</td><td>34</td><td>24</td></tr>
+        <tr class="sel" data-ok="1"><td>משקל סגולי של השתן</td><td>1.005–1.030</td><td>1.032</td><td>1.010</td></tr>
+        <tr class="sel" data-ok="1"><td>נתרן בשתן (mEq/L)</td><td>תלוי בצריכה</td><td>12</td><td>55</td></tr>
+        <tr class="sel" data-ok="0"><td>נפח שתן ב-24 שעות (מ"ל)</td><td>800–2000</td><td>450</td><td>600</td></tr>
+      </tbody>
+    </table>
+    <textarea style="margin-top:12px" maxlength="700" placeholder="הסבירו מה מלמד כל אחד מהממצאים שבחרתם על תפקוד הצינוריות אצל כל מטופל..."></textarea><div class="counter">0/700</div>
+    <div class="actions"><button class="btn primary" data-check="q2a">בדיקה</button><button class="btn" data-reset="q2a">איפוס</button></div>
+    <div class="fb"></div>
+    <div class="key"><b>מחוון:</b> א"ג – פרה-רנלית: הקריאטינין ירד מיד אחרי העירוי. ר"ש – רנלית: הקריאטינין המשיך לעלות למרות העירוי. הממצאים שמבחינים: משקל סגולי ונתרן בשתן. אצל א"ג הצינוריות תקינות, והן חוסכות מים ונתרן בהשפעת ADH ואלדוסטרון, ולכן השתן מרוכז ודל בנתרן. אצל ר"ש הצינוריות פגועות, ולכן השתן אינו מרוכז והנתרן "בורח". קריאטינין, BUN ונפח שתן חריגים אצל שניהם, ולכן אינם מבחינים (2 נק' לשיוך, 2 לבחירה, 2 להסבר).</div>
+  </div>
+
+  <!-- 2B create -->
+  <div class="item" id="q2b">
+    <span class="bloom">יצירה – ניבוי ובניית גרף</span>
+    <h3><span class="lbl">ב</span> שרטטו מהלך צפוי <span class="pts">(6 נקודות)</span></h3>
+    <p class="instr">מטופל שלישי, <b>מ"ב</b>, בן 70, אושפז באותו יום עם קריאטינין 1.6. הגדלה של בלוטת הערמונית חסמה אצלו את יציאת השתן מהשלפוחית. <b>ביום 2</b> הוכנס לו צנתר לשלפוחית, והוא ניקז את השתן.
+      <b>גררו למעלה או למטה את הנקודות הירוקות באיור 1</b> כדי לשרטט את רמת הקריאטינין הצפויה של מ"ב בימים 1–5. אחר כך הסבירו את הצורה שבחרתם.</p>
+    <div class="readout" id="mbReadout"></div>
+    <textarea maxlength="700" placeholder="הסבירו את מהלך הגרף שבניתם: מה קורה לפני הכנסת הצנתר ומה אחריו, ולמה..."></textarea><div class="counter">0/700</div>
+    <div class="actions"><button class="btn primary" data-check="q2b">בדיקת הגרף</button><button class="btn" data-reset="q2b">איפוס הנקודות</button></div>
+    <div class="fb"></div>
+    <div class="key"><b>מחוון:</b> עד יום 2 הקריאטינין ממשיך לעלות. החסימה מעלה את הלחץ בשופכנים ובקופסית באומן, והסינון בפקעית יורד. אחרי הניקוז הלחץ יורד, הסינון חוזר, והקריאטינין יורד בהדרגה לכיוון התקין. כך הגרף דומה לזה של א"ג, אבל השיפור מתחיל רק אחרי ההתערבות שמסירה את החסימה ולא אחרי העירוי (3 נק' לגרף, 3 נק' להסבר).</div>
+  </div>
+
+  <!-- 2C evaluate -->
+  <div class="item" id="q2c">
+    <span class="bloom">הערכה – שיפוט טענה והמלצה</span>
+    <h3><span class="lbl">ג</span> הערכת טענה <span class="pts">(6 נקודות)</span></h3>
+    <p class="instr">ביום 3 אמר חבר לא"ג: "הקריאטינין שלך חזר ל-1, אז הכליות שלך בסדר. מחר אפשר לחזור למסלול ולהמשיך כמו קודם."</p>
+    <div class="mc" data-ans="partial">
+      <label><input type="radio" name="q2c" value="agree"> אני מסכים/ה עם הטענה במלואה</label>
+      <label><input type="radio" name="q2c" value="partial"> אני מסכים/ה עם חלק מהטענה ומתנגד/ת לחלק אחר</label>
+      <label><input type="radio" name="q2c" value="disagree"> אני מתנגד/ת לטענה במלואה</label>
+    </div>
+    <p class="instr" style="margin-top:12px">נמקו את עמדתכם בעזרת השוואה בין א"ג לר"ש באיור 1. כתבו לא"ג המלצה מעשית להמשך הטיול.</p>
+    <textarea maxlength="800" placeholder="כתבו את תשובתכם כאן..."></textarea><div class="counter">0/800</div>
+    <div class="key"><b>מחוון:</b> החלק הנכון: הירידה המהירה לערך התקין מראה שהפגיעה הייתה הפיכה, ולא נגרם נזק לרקמת הכליה. אצל ר"ש, לשם השוואה, הקריאטינין לא ירד. החלק השגוי: "להמשיך כמו קודם". שתייה מעטה בחום תגרום שוב לירידה בזרימת הדם לכליה, והתייבשות חוזרת עלולה לפגוע ברקמת הכליה. המלצה: שתייה מרובה וקבועה, הימנעות משעות החום ומעקב אחרי צבע השתן. כל עמדה מנומקת היטב מתקבלת (4 נק' לנימוק, 2 להמלצה).</div>
+  </div>
+</section>
+</main>
+<footer class="note">דגם לבחינה ממוחשבת. השאלות נכתבו על בסיס שאלות 3 ו-11 בשאלון 802381 (קיץ תשפ"ד). האיורים והנתונים נבנו לצורך הדגמה. התשובות אינן נשמרות, והן נמחקות ברענון הדף.</footer>
+
+<script>
+(function(){
+const $=(s,r=document)=>r.querySelector(s), $$=(s,r=document)=>[...r.querySelectorAll(s)];
+const NS="http://www.w3.org/2000/svg";
+const el=(tag,attrs={},parent)=>{const e=document.createElementNS(NS,tag);for(const k in attrs)e.setAttribute(k,attrs[k]);if(parent)parent.appendChild(e);return e;};
+
+/* nav & teacher */
+$$("nav.qnav button").forEach(b=>b.onclick=()=>{
+  $$("nav.qnav button").forEach(x=>x.classList.toggle("active",x===b));
+  $$("section.q").forEach(s=>s.classList.toggle("active",s.id===b.dataset.q));
+  window.scrollTo({top:0,behavior:"smooth"});
+});
+$("#teacher").onchange=e=>document.body.classList.toggle("teacher",e.target.checked);
+$$("textarea").forEach(t=>{const c=t.nextElementSibling;t.addEventListener("input",()=>{if(c)c.textContent=t.value.length+"/"+t.maxLength;});});
+
+function fb(item,ok,msg){const f=$(".fb",item);f.className="fb show "+(ok?"ok":"bad");f.textContent=msg;}
+function fbClear(item){const f=$(".fb",item);if(f)f.className="fb";}
+
+/* ---------- Hematocrit lab ---------- */
+(()=>{
+  const TUBES=[{id:"A",hct:56},{id:"B",hct:28},{id:"C",hct:44}];
+  const H=240,TOP=30,BOT=TOP+H,TW=46,TX=24; // tube geometry in a 120x300 viewBox
+  const wrap=$("#tubes");let spun=false;
+  window.__hct={marks:{},spun:()=>spun};
+  // rotor
+  const rotor=$("#rotor");
+  el("circle",{cx:110,cy:110,r:100,fill:"#e9eef3",stroke:"#9aa9b8","stroke-width":3},rotor);
+  const spinG=el("g",{style:"transform-origin:110px 110px"},rotor);
+  el("circle",{cx:110,cy:110,r:78,fill:"#d5dde6"},spinG);
+  [0,120,240].forEach((a,i)=>{const g=el("g",{transform:`rotate(${a} 110 110)`},spinG);
+    el("rect",{x:102,y:30,width:16,height:58,rx:8,fill:"#fff",stroke:"#7f8c99"},g);
+    el("rect",{x:104,y:44,width:12,height:42,rx:6,fill:"#8b1a1a",class:"rt"},g);
+    const t=el("text",{x:110,y:26,"text-anchor":"middle","font-size":13,"font-weight":700,fill:"#1d2733"},g);t.textContent=TUBES[i].id;});
+  el("circle",{cx:110,cy:110,r:12,fill:"#7f8c99"},spinG);
+
+  const tubeEls=TUBES.map(T=>{
+    const box=document.createElement("div");box.className="tube-box";
+    box.innerHTML=`<svg viewBox="0 0 120 300" width="120" height="300"></svg><div class="tube-lbl">מבחנה ${T.id}</div><div class="tube-read">—</div>`;
+    wrap.appendChild(box);
+    const svg=box.querySelector("svg");svg.style.direction="ltr";
+    // ruler
+    for(let p=0;p<=100;p+=5){const y=BOT-p/100*H,big=p%10===0;el("line",{x1:TX+TW+4,x2:TX+TW+(big?14:9),y1:y,y2:y,stroke:"#5b6b7c","stroke-width":big?1.2:.7},svg);
+      if(p%20===0)el("text",{x:TX+TW+17,y:y+4,"font-size":10,fill:"#5b6b7c"},svg).textContent=p+"%";}
+    // tube body
+    el("rect",{x:TX,y:TOP-14,width:TW,height:H+22,rx:10,fill:"#f7fafc",stroke:"#7f8c99","stroke-width":2},svg);
+    const plasma=el("rect",{x:TX+3,y:TOP,width:TW-6,height:H,fill:"#8b1a1a"},svg);
+    const buffy=el("rect",{x:TX+3,y:BOT,width:TW-6,height:0,fill:"#f4f1ea"},svg);
+    const rbc=el("rect",{x:TX+3,y:BOT,width:TW-6,height:0,fill:"#8b1a1a",rx:0},svg);
+    // marker
+    const mk=el("g",{style:"display:none;cursor:ns-resize"},svg);
+    el("rect",{x:TX-12,y:-8,width:TW+40,height:16,fill:"transparent"},mk);
+    el("line",{x1:TX-8,x2:TX+TW+6,y1:0,y2:0,stroke:"#e8771e","stroke-width":2.5},mk);
+    el("polygon",{points:`${TX-14},-6 ${TX-14},6 ${TX-4},0`,fill:"#e8771e"},mk);
+    let mp=100;const read=box.querySelector(".tube-read");
+    const setM=p=>{mp=Math.max(0,Math.min(100,Math.round(p)));mk.setAttribute("transform",`translate(0 ${BOT-mp/100*H})`);read.textContent=`הסמן: ${mp}%`;window.__hct.marks[T.id]=mp;};
+    let drag=false;
+    mk.addEventListener("pointerdown",e=>{drag=true;mk.setPointerCapture(e.pointerId);e.preventDefault();});
+    mk.addEventListener("pointermove",e=>{if(!drag)return;const pt=svg.createSVGPoint();pt.x=e.clientX;pt.y=e.clientY;const p=pt.matrixTransform(svg.getScreenCTM().inverse());setM((BOT-p.y)/H*100);fbClear($("#q1a"));});
+    mk.addEventListener("pointerup",()=>drag=false);
+    return{T,plasma,buffy,rbc,mk,setM,read};
+  });
+
+  function separate(k){ // k 0..1 tween
+    tubeEls.forEach(({T,plasma,buffy,rbc})=>{
+      const rh=H*T.hct/100,bh=H*0.012;
+      const curR=H+(rh-H)*k; // rbc column shrinks from full to hct
+      rbc.setAttribute("y",BOT-curR);rbc.setAttribute("height",curR);
+      buffy.setAttribute("y",BOT-curR-bh*k);buffy.setAttribute("height",bh*k);
+      const c=k<1?`rgb(${139+ (232-139)*k},${26+(196-26)*k},${26+(90-26)*k})`:"#e8c45a";
+      plasma.setAttribute("fill",c);
+    });
+  }
+  separate(0);
+  $("#spinBtn").onclick=()=>{
+    if(spun){ // reset to unspun
+      spun=false;separate(0);tubeEls.forEach(t=>{t.mk.style.display="none";t.read.textContent="—";});window.__hct.marks={};
+      $("#spinBtn").textContent="▶ הפעלת הצנטריפוגה";$("#spinState").textContent="המבחנות לפני הסירכוז";return;}
+    $("#spinBtn").disabled=true;$("#spinState").textContent="מסרכז...";
+    spinG.animate([{transform:"rotate(0deg)"},{transform:"rotate(2160deg)"}],{duration:2600,easing:"cubic-bezier(.4,0,.2,1)"});
+    const t0=performance.now();
+    (function step(now){const k=Math.min(1,(now-t0)/2600);separate(k*k);if(k<1)requestAnimationFrame(step);else{
+      spun=true;$("#spinBtn").disabled=false;$("#spinBtn").textContent="↺ החזרת המבחנות למצב ההתחלתי";$("#spinState").textContent="הסירכוז הסתיים: תאי הדם האדומים שקעו לתחתית, והפלזמה הצהובה למעלה.";
+      tubeEls.forEach(t=>{t.mk.style.display="";t.setM(100);});}})(t0);
+  };
+
+  // prediction tube (1C)
+  const ps=$("#predTube");ps.style.direction="ltr";
+  for(let p=0;p<=100;p+=5){const y=BOT-p/100*H,big=p%10===0;el("line",{x1:TX+TW+4,x2:TX+TW+(big?14:9),y1:y,y2:y,stroke:"#5b6b7c","stroke-width":big?1.2:.7},ps);
+    if(p%20===0)el("text",{x:TX+TW+17,y:y+4,"font-size":10,fill:"#5b6b7c"},ps).textContent=p+"%";}
+  el("rect",{x:TX,y:TOP-14,width:TW,height:H+22,rx:10,fill:"#f7fafc",stroke:"#7f8c99","stroke-width":2},ps);
+  el("rect",{x:TX+3,y:TOP,width:TW-6,height:H,fill:"#e8c45a"},ps);
+  const prbc=el("rect",{x:TX+3,width:TW-6,fill:"#8b1a1a"},ps);
+  const pm=el("g",{style:"cursor:ns-resize"},ps);
+  el("rect",{x:TX-12,y:-9,width:TW+40,height:18,fill:"transparent"},pm);
+  el("line",{x1:TX-8,x2:TX+TW+6,y1:0,y2:0,stroke:"#e8771e","stroke-width":3},pm);
+  el("polygon",{points:`${TX-14},-6 ${TX-14},6 ${TX-4},0`,fill:"#e8771e"},pm);
+  el("text",{x:TX+TW/2,y:TOP-20,"text-anchor":"middle","font-size":11,fill:"#1d2733"},ps).textContent="ד\"ל אחרי עירוי";
+  let pred=56;const setP=p=>{pred=Math.max(5,Math.min(95,Math.round(p)));const h=H*pred/100;prbc.setAttribute("y",BOT-h);prbc.setAttribute("height",h);pm.setAttribute("transform",`translate(0 ${BOT-h})`);
+    $("#predRead").textContent=`ההמטוקריט הצפוי שבניתם: ${pred}% (לפני הטיפול: 56%)`;window.__hct.pred=pred;};
+  let pd=false;pm.addEventListener("pointerdown",e=>{pd=true;pm.setPointerCapture(e.pointerId);e.preventDefault();});
+  pm.addEventListener("pointermove",e=>{if(!pd)return;const pt=ps.createSVGPoint();pt.x=e.clientX;pt.y=e.clientY;const p=pt.matrixTransform(ps.getScreenCTM().inverse());setP((BOT-p.y)/H*100);fbClear($("#q1c"));});
+  pm.addEventListener("pointerup",()=>pd=false);
+  setP(56);window.__hct.moved=()=>pred!==56;
+  window.__hct.reset=()=>{if(spun)tubeEls.forEach(t=>t.setM(100));};
+  window.__hct.truth=Object.fromEntries(TUBES.map(t=>[t.id,t.hct]));
+})();
+
+/* ---------- generic drag & drop (2A) ---------- */
+let selected=null;
+const bankOf=ch=>$(`.bank[data-bank="${ch.closest(".item").id}"]`);
+$$(".chip").forEach(ch=>{
+  ch.addEventListener("dragstart",e=>{selected=ch;e.dataTransfer.setData("text/plain","x");});
+  ch.addEventListener("click",e=>{e.stopPropagation();
+    if(ch.parentElement.classList.contains("slot")&&selected!==ch){ch.parentElement.classList.remove("ok","bad");bankOf(ch).appendChild(ch);return;}
+    if(selected)selected.classList.remove("sel");selected=(selected===ch)?null:ch;if(selected)ch.classList.add("sel");});
+});
+function place(slot){if(!selected||selected.closest(".item")!==slot.closest(".item"))return;slot.classList.remove("ok","bad");if(slot.firstElementChild)bankOf(selected).appendChild(slot.firstElementChild);slot.appendChild(selected);selected.classList.remove("sel");selected=null;fbClear(slot.closest(".item"));}
+$$(".slot").forEach(s=>{s.addEventListener("dragover",e=>{e.preventDefault();s.classList.add("over");});s.addEventListener("dragleave",()=>s.classList.remove("over"));s.addEventListener("drop",e=>{e.preventDefault();s.classList.remove("over");place(s);});s.addEventListener("click",()=>place(s));});
+$$(".bank").forEach(b=>{b.addEventListener("dragover",e=>e.preventDefault());b.addEventListener("drop",e=>{e.preventDefault();if(selected&&selected.closest(".item")===b.closest(".item")){b.appendChild(selected);selected.classList.remove("sel");selected=null;}});});
+
+/* lab rows (max 2) */
+$$("#labTable tr.sel").forEach(tr=>tr.addEventListener("click",()=>{
+  tr.classList.remove("ok","bad");fbClear($("#q2a"));
+  if(tr.classList.contains("picked")){tr.classList.remove("picked");return;}
+  const p=$$("#labTable tr.picked");if(p.length>=2)p[0].classList.remove("picked");tr.classList.add("picked");
+}));
+$$("select").forEach(s=>s.addEventListener("change",()=>{s.classList.remove("ok","bad");fbClear(s.closest(".item"));}));
+$$(".mc input").forEach(i=>i.addEventListener("change",()=>$$(".mc label",i.closest(".item")).forEach(l=>l.classList.remove("ok","bad"))));
+
+/* ---------- Creatinine graph with draggable series ---------- */
+const crA=[1.3,1.25,1.1,1.0,0.95,0.9], crB=[1.4,1.8,2.3,2.6,2.5,2.2];
+const crC=[1.6,1.6,1.6,1.6,1.6,1.6];
+(()=>{
+  const svg=$("#crGraph"),L=80,R=660,T=20,B=300,ymax=3.0;svg.style.direction="ltr";
+  const X=d=>L+(d/5)*(R-L), Y=v=>B-(v/ymax)*(B-T), V=y=>Math.max(0.2,Math.min(ymax,(B-y)/(B-T)*ymax));
+  for(let v=0;v<=3.0001;v+=0.5){el("line",{x1:L,x2:R,y1:Y(v),y2:Y(v),stroke:"#e3e9ef"},svg);el("text",{x:L-10,y:Y(v)+5,"font-size":13,fill:"#5b6b7c","text-anchor":"end"},svg).textContent=v.toFixed(1);}
+  for(let d=0;d<=5;d++)el("text",{x:X(d),y:B+22,"text-anchor":"middle","font-size":13,fill:"#5b6b7c"},svg).textContent=d;
+  el("text",{x:(L+R)/2,y:B+48,"text-anchor":"middle","font-size":14,fill:"#1d2733"},svg).textContent="יום אשפוז";
+  el("text",{x:28,y:(T+B)/2,"text-anchor":"middle","font-size":14,fill:"#1d2733",transform:`rotate(-90 28 ${(T+B)/2})`},svg).textContent='קריאטינין (מ"ג/ד"ל)';
+  el("line",{x1:L,x2:R,y1:B,y2:B,stroke:"#5b6b7c"},svg);el("line",{x1:L,x2:L,y1:T,y2:B,stroke:"#5b6b7c"},svg);
+  el("line",{x1:L,x2:R,y1:Y(1),y2:Y(1),stroke:"#1e7a46","stroke-dasharray":"6 4","stroke-width":1.5},svg);
+  el("text",{x:L+8,y:Y(1)+18,"font-size":12,fill:"#1e7a46","text-anchor":"start"},svg).textContent="גבול עליון של התקין (1.0)";
+  el("line",{x1:X(1),x2:X(1),y1:T,y2:B,stroke:"#7a5cc0","stroke-dasharray":"3 4","stroke-width":1.5},svg);
+  el("text",{x:X(1)+6,y:T+14,"font-size":12,fill:"#7a5cc0","text-anchor":"start"},svg).textContent="עירוי נוזלים (א\"ג, ר\"ש)";
+  el("line",{x1:X(2),x2:X(2),y1:T+24,y2:B,stroke:"#2e8b57","stroke-dasharray":"2 5","stroke-width":1.5},svg);
+  el("text",{x:X(2)+6,y:T+38,"font-size":12,fill:"#2e8b57","text-anchor":"start"},svg).textContent="צנתר (מ\"ב)";
+  const tip=$("#tip"),fig=svg.parentElement;
+  const showTip=(e,txt)=>{const r=fig.getBoundingClientRect();tip.style.display="block";tip.textContent=txt;tip.style.left=(e.clientX-r.left+12)+"px";tip.style.top=(e.clientY-r.top-30)+"px";};
+  [[crA,"#1f5f8b",'א"ג'],[crB,"#c9541e",'ר"ש']].forEach(([data,c,name])=>{
+    el("polyline",{points:data.map((v,d)=>X(d)+","+Y(v)).join(" "),fill:"none",stroke:c,"stroke-width":3},svg);
+    data.forEach((v,d)=>{el("circle",{cx:X(d),cy:Y(v),r:5.5,fill:"#fff",stroke:c,"stroke-width":2.5},svg);
+      const h=el("circle",{cx:X(d),cy:Y(v),r:12,fill:"transparent"},svg);
+      h.addEventListener("mousemove",e=>showTip(e,`${name} · יום ${d}: ${v.toFixed(2)} מ"ג/ד"ל`));h.addEventListener("mouseleave",()=>tip.style.display="none");});
+  });
+  // draggable series C
+  const gC=el("g",{},svg);const line=el("polyline",{fill:"none",stroke:"#2e8b57","stroke-width":3,"stroke-dasharray":"7 4"},gC);
+  const dots=crC.map((v,d)=>{const c=el("circle",{cx:X(d),cy:Y(v),r:d?9:6,fill:d?"#2e8b57":"#fff",stroke:"#2e8b57","stroke-width":2.5,style:d?"cursor:ns-resize":""},gC);return c;});
+  function upd(){line.setAttribute("points",crC.map((v,d)=>X(d)+","+Y(v)).join(" "));crC.forEach((v,d)=>dots[d].setAttribute("cy",Y(v)));
+    $("#mbReadout").textContent='הגרף של מ"ב: '+crC.map((v,d)=>`יום ${d}: ${v.toFixed(1)}`).join(" · ");}
+  let drag=null;
+  dots.forEach((c,d)=>{if(!d)return;
+    c.addEventListener("pointerdown",e=>{drag=d;c.setPointerCapture(e.pointerId);e.preventDefault();});
+    c.addEventListener("pointermove",e=>{if(drag!==d)return;const pt=svg.createSVGPoint();pt.x=e.clientX;pt.y=e.clientY;const p=pt.matrixTransform(svg.getScreenCTM().inverse());crC[d]=Math.round(V(p.y)*10)/10;upd();showTip(e,`מ"ב · יום ${d}: ${crC[d].toFixed(1)}`);fbClear($("#q2b"));});
+    c.addEventListener("pointerup",()=>{drag=null;tip.style.display="none";});
+  });
+  upd();
+  window.__q2b={reset(){for(let d=1;d<6;d++)crC[d]=1.6;upd();}};
+})();
+
+/* ---------- checks ---------- */
+const checks={
+  q1a(){const it=$("#q1a"),H=window.__hct;if(!H.spun())return fb(it,false,"קודם הפעילו את הצנטריפוגה ומדדו את המבחנות.");
+    let m=0;const tr=H.truth,mk=H.marks;const miss=Object.keys(tr).filter(k=>Math.abs((mk[k]??100)-tr[k])>3);m=3-miss.length;
+    let g=0;$$(".slot",it).forEach(s=>{const c=s.firstElementChild;const ok=c&&c.dataset.v===s.dataset.ans;s.classList.add(ok?"ok":"bad");if(ok)g++;});
+    fb(it,m===3&&g===3,`מדידות מדויקות: ${m} מתוך 3${miss.length?" (בדקו את מבחנה "+miss.join(", ")+")":""} · התאמות נכונות: ${g} מתוך 3.`);},
+  q1b(){const it=$("#q1b");let g=0;const ss=$$("select",it);ss.forEach(s=>{const ok=s.value===s.dataset.ans;s.classList.add(ok?"ok":"bad");if(ok)g++;});fb(it,g===4,g===4?"הטבלה נכונה. עיקר הניקוד הוא על ההסבר.":`${g} מתוך 4 נכונים בטבלה. חשבו מה כל מטופל איבד.`);},
+  q1c(){const it=$("#q1c"),box=$(".mc",it),ch=$("input:checked",box),H=window.__hct;
+    if(!ch)return fb(it,false,"עדיין לא נבחרה עמדה.");const okC=ch.value===box.dataset.ans;
+    $$(".mc label",it).forEach(l=>l.classList.remove("ok","bad"));ch.closest("label").classList.add(okC?"ok":"bad");
+    if(!H.moved())return fb(it,false,(okC?"העמדה נכונה. ":"")+"עכשיו גררו את הגבול במבחנה כדי לחזות את ההמטוקריט אחרי העירוי.");
+    const okP=H.pred>=40&&H.pred<=50;
+    fb(it,okC&&okP,(okC?"העמדה נכונה. ":"קראו שוב את הטענה: האם באמת יש לד\"ל יותר תאים? ")+(okP?`הניבוי (${H.pred}%) סביר.`:H.pred>50?`הניבוי (${H.pred}%) עדיין גבוה. מה יקרה לנפח הפלזמה אחרי העירוי?`:`הניבוי (${H.pred}%) נמוך מדי. האם העירוי מוריד את מספר התאים?`));},
+  q2a(){const it=$("#q2a");let g=0;$$(".slot",it).forEach(s=>{const c=s.firstElementChild;const ok=c&&c.dataset.v===s.dataset.ans;s.classList.add(ok?"ok":"bad");if(ok)g++;});
+    const p=$$("#labTable tr.picked");let h=0;p.forEach(tr=>{const ok=tr.dataset.ok==="1";tr.classList.remove("picked");tr.classList.add(ok?"ok":"bad");if(ok)h++;});
+    fb(it,g===2&&h===2,`שיוך: ${g} מתוך 2 · ממצאים מבחינים: ${h} מתוך 2${p.length<2?" (יש לבחור שני ממצאים)":""}.`);},
+  q2b(){const it=$("#q2b"),c=crC;const rise=c[1]>c[0]&&c[2]>=c[1];const fall=c[3]<c[2]&&c[4]<=c[3]+.05&&c[5]<=c[4]+.05;const end=c[5]<=1.3;
+    fb(it,rise&&fall&&end,rise&&fall&&end?"מהלך הגרף מתאים. ההסבר ייבדק על ידי המורה.":
+      [!rise?"מה קורה לסינון בפקעית כל עוד החסימה קיימת, עד יום 2?":"",!fall?"מה משתנה אחרי שהצנתר מנקז את השתן?":"",fall&&!end?"לאיזה ערך הקריאטינין צפוי להתקרב בסוף המעקב?":""].filter(Boolean).join(" "));}
+};
+$$("[data-check]").forEach(b=>b.onclick=()=>checks[b.dataset.check]());
+const resets={
+  q1a(){window.__hct.reset();const it=$("#q1a"),bank=$('.bank[data-bank="q1a"]');$$(".slot .chip",it).forEach(c=>bank.appendChild(c));$$(".slot",it).forEach(s=>s.classList.remove("ok","bad"));},
+  q2a(){const it=$("#q2a"),bank=$('.bank[data-bank="q2a"]');$$(".slot .chip",it).forEach(c=>bank.appendChild(c));$$(".slot",it).forEach(s=>s.classList.remove("ok","bad"));$$("#labTable tr").forEach(tr=>tr.classList.remove("picked","ok","bad"));},
+  q2b(){window.__q2b.reset();}
+};
+$$("[data-reset]").forEach(b=>b.onclick=()=>{resets[b.dataset.reset]();fbClear($("#"+b.dataset.reset));});
+})();
+
+</script>
+</body>
+</html>
